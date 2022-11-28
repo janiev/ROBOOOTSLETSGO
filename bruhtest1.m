@@ -34,8 +34,22 @@ offset = zValue/norm(B-A);
 a = offset;
 end
 
-function a = desiredHeadingCalculator(currentPath,pos)
-
+function a = desiredHeadingCalculator(currentPath,posList)
+% calculates desiredheading in site coordinates
+outerThreshold=2;
+innerThreshold=0.1;
+angleCurrentPath=rad2deg(atan((currentPath(2,2)-currentPath(1,2))/(currentPath(2,1)-currentPath(1,1))))
+offset=offsetCalculator(currentPath,posList(end,:))
+if offset>outerThreshold %buiten outerthreshold
+    angle=90+angleCurrentPath;
+elseif (offset<innerThreshold) && (offset>-innerThreshold) %binnen innerthreshold
+    angle=angleCurrentPath; 
+elseif offset<-outerThreshold % buiten outerthreshold
+    angle=-90+angleCurrentPath; 
+else % lineaire deel (tussen inner en outer)
+    angle=(offset*90)/(outerThreshold)+angleCurrentPath;
+end
+a = angle;%double
 end
 
 function agraad = headingCalculator(posList,n)
