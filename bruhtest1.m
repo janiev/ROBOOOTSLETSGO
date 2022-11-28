@@ -35,22 +35,24 @@ a = offset;
 end
 
 function a = desiredHeadingCalculator(currentPath,pos)
-% calculates desiredheading 
-a = 5;%double
+
 end
 
-function a = headingCalculator(posList)
+function agraad = headingCalculator(posList,n)
 %calculates current heading of vehicle using the posList
 %currently only works for positive X
+%n is dimension of the regression matrix
+for i=1:n
+    X=[]
+    Y=[]
+lastx=([posList(end-(n)+i,1)])
+lasty=([posList(end-(n)+i,2)])
+X=[X, lastx]
+Y=[Y, lasty]
 
-if length(posList(:,1))>=10
-    deep = 10;
+coef=polyfit(X,Y,1)
+slope=coef(1)
+a=atan(slope)
+agraad=rad2deg(a)
 
-else
-    deep = length(posList(:,1));
-end
-
-
-
-    a = 5;%double
 end
