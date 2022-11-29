@@ -1,0 +1,28 @@
+function angle = headingCalculator(posList)
+
+n = 5;%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+l = length(posList(:,1));     
+x = posList(l-n:l,1);
+y= posList(l-n:l,2);
+checkx = x(end)-x(1);
+checky = y(end)-y(1);
+treshold = 0.000000000001;%!!!!!!!!!!!!!!!!!!!!!!!!!!!
+if abs(checkx)<treshold%needs to be checked...
+    Y = [ones(length(y),1) y];
+    slope = Y\x;
+    slope=slope(2);
+
+
+    slope = slope*sign(checky);
+    angle = 90-rad2deg(atan2(slope,sign(checky)));
+
+else
+    X = [ones(length(x),1) x];
+    slope = X\y;
+    slope=slope(2);
+    slope = slope*sign(checkx);
+    angle = rad2deg(atan2(slope,sign(checkx)));
+
+end
+
+end
