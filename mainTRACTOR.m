@@ -1,8 +1,8 @@
 %% INPUT FOR TESTING
 waypoints = [25 23;0 15;3 3;5 6;8 10];
-dist = 0.01;
+dist = 0.1;
 waypointsWOW = waypointFactory(waypoints,dist);
-index = 40; %input
+index = 150; %input
 posList = waypointsWOW(1:index,1:2);
 currentPath = [20 22; 19 17];%  0.2758    0.2758
 %% nu regelaar met als input :
