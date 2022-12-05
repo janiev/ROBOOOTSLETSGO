@@ -23,7 +23,7 @@ for i = 2:length(waypoints)
     end
     
     for j = 1:jMax
-        pointList(j,1:2)=pointList(j,1:2)+[rand*0.05 rand*0.05];
+        pointList(j,1:2)=pointList(j,1:2)+[rand*0.000 rand*0.000];
 
     end
     pointList(jMax,1:2) = B;

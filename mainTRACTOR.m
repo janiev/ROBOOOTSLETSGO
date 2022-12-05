@@ -1,8 +1,8 @@
 %% INPUT FOR TESTING
-waypoints = [25 23;0 15;3 3;5 6;8 10];
+waypoints = [25 23;0 15;3 3;5 6;8 10;20 22];
 dist = 0.1;
 waypointsWOW = waypointFactory(waypoints,dist);
-index = 150; %input
+index = 100; %input
 posList = waypointsWOW(1:index,1:2);
 currentPath = [20 22; 19 17];%  0.2758    0.2758
 %% nu regelaar met als input :
@@ -10,7 +10,7 @@ currentPath = [20 22; 19 17];%  0.2758    0.2758
 %headingErrorList
 %currentPath
 
-Kp = 1;minDistance=0.5;check=false;%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Kp = 2;minDistance=0.5;check=false;%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 headingError = wrapTo360(desiredHeadingCalculator(currentPath,posList))-wrapTo360(headingCalculator(posList));
 if headingError>180
@@ -33,9 +33,9 @@ end
 %check
 
 %% testing
-desiredHeading = desiredHeadingCalculator(currentPath,posList)
-heading = wrapTo360(headingCalculator(posList))
-headingError = wrapTo360(desiredHeadingCalculator(currentPath,posList))-wrapTo360(headingCalculator(posList))
+desiredHeading = desiredHeadingCalculator(currentPath,posList);
+heading = wrapTo360(headingCalculator(posList));
+headingError = wrapTo360(desiredHeadingCalculator(currentPath,posList))-wrapTo360(headingCalculator(posList));
 
 hold on
 
@@ -78,7 +78,7 @@ function a = desiredHeadingCalculator(currentPath,posList)
 % calculates desiredheading in site coordinates
 outerThreshold=2;
 innerThreshold=0.1;
-angleCurrentPath=rad2deg(atan((currentPath(2,2)-currentPath(1,2))/(currentPath(2,1)-currentPath(1,1))));
+angleCurrentPath=rad2deg(atan2((currentPath(2,2)-currentPath(1,2)),(currentPath(2,1)-currentPath(1,1))));
 offset=offsetCalculator(currentPath,posList(end,:));
 if offset>outerThreshold %buiten outerthreshold
     angle=90+angleCurrentPath;
@@ -86,15 +86,16 @@ elseif (offset<innerThreshold) && (offset>-innerThreshold) %binnen innerthreshol
     angle=angleCurrentPath; 
 elseif offset<-outerThreshold % buiten outerthreshold
     angle=-90+angleCurrentPath; 
+elseif ((offset<-innerThreshold) && (offset>-outerThreshold)) % lineaire deel (tussen outer en inner)
+    angle=(offset*90)/(outerThreshold-innerThreshold)+(90*innerThreshold)/(outerThreshold-innerThreshold)+angleCurrentPath;
 else % lineaire deel (tussen inner en outer)
-    angle=(offset*90)/(outerThreshold)+angleCurrentPath;
+   angle=(offset*90)/(outerThreshold-innerThreshold)-(90*innerThreshold)/(outerThreshold-innerThreshold)+angleCurrentPath;
 end
 a = angle;%double
 end
-
 function angle = headingCalculator(posList)
 
-n = 5;%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+n = 20;%!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 l = length(posList(:,1));     
 x = posList(l-n:l,1);
 y= posList(l-n:l,2);
